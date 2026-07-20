@@ -1,0 +1,108 @@
+name: Leaderboard submission
+description: Submit a run (successful or failed) for the Can It Run AI? leaderboard
+title: "[Submission] MACHINE NAME - WHAT YOU RAN"
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for submitting. Read the rules in the README first.
+        Failed attempts are welcome too; fill in what you have and say where it broke in the limitations field.
+
+  - type: input
+    id: machine
+    attributes:
+      label: Machine name and year
+      description: What is the machine and roughly when was it made?
+      placeholder: "Sun Cobalt Qube 3 (1998)"
+    validations:
+      required: true
+
+  - type: input
+    id: cpu
+    attributes:
+      label: CPU
+      placeholder: "AMD K6-2/450"
+    validations:
+      required: true
+
+  - type: input
+    id: ram
+    attributes:
+      label: RAM
+      placeholder: "64 MB"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-ran
+    attributes:
+      label: What you ran
+      description: Model, parameter count, quantization, engine/port, OS, compiler if relevant.
+      placeholder: "819K-param nano-GPT, C89 port, gcc 2.95, stock 2001 Cobalt Linux"
+    validations:
+      required: true
+
+  - type: input
+    id: speed
+    attributes:
+      label: Speed
+      description: Tokens per second or equivalent measurement, and how you measured it. For non-inference compute, describe the workload and throughput.
+      placeholder: "~12 tok/s (64 tokens / 5.30 s CPU time)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: real-or-emulated
+    attributes:
+      label: Real hardware or emulated?
+      description: Emulated runs are welcome but must be labeled. Misrepresenting emulation as real hardware gets the entry pulled.
+      options:
+        - Real hardware
+        - Emulated (labeled)
+        - Both (details in limitations)
+    validations:
+      required: true
+
+  - type: input
+    id: video
+    attributes:
+      label: Video URL
+      description: Uncut boot-to-output video, if you have one. Required if you are not attaching raw logs plus checksums.
+      placeholder: "https://..."
+
+  - type: input
+    id: sha256-binary
+    attributes:
+      label: sha256 of the binary
+      placeholder: "sha256sum ./your-binary"
+
+  - type: input
+    id: sha256-model
+    attributes:
+      label: sha256 of the model file
+      placeholder: "sha256sum ./model.bin"
+
+  - type: textarea
+    id: raw-logs
+    attributes:
+      label: Raw logs
+      description: Paste or attach (drag and drop) the raw run log. Required if you are not providing a video.
+
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Honest limitations
+      description: Required. What does this demo NOT show? Tiny model, cherry-picked prompt, emulator quirks, throttling, partial functionality, where it failed, etc.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: The real-hardware / emulated labeling above is accurate.
+          required: true
+        - label: I have the right to share the video, logs, and files linked here, and I understand this repo is AGPL-3.0.
+          required: true
