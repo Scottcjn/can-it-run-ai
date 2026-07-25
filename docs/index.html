@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can It Run AI? — The Vintage Silicon Leaderboard</title>
+<meta name="description" content="A community leaderboard for real AI inference on vintage and exotic silicon. N64, Cobalt Qube, PowerPC, POWER8. Prove it or it didn't happen.">
+<style>
+  :root {
+    --bg: #0a0e0a;
+    --panel: #101710;
+    --border: #1f3320;
+    --green: #33ff66;
+    --green-dim: #1fa347;
+    --amber: #ffb000;
+    --text: #b8e6c2;
+    --muted: #6f9678;
+    --red: #ff5f56;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "IBM Plex Mono", "Fira Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 15px;
+    line-height: 1.55;
+    padding-bottom: 4rem;
+  }
+  /* CRT scanlines, subtle */
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0 1px, transparent 1px 3px);
+    pointer-events: none;
+    z-index: 9;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+  header { padding: 3.5rem 0 2rem; text-align: center; }
+  .prompt { color: var(--green-dim); font-size: 0.85rem; letter-spacing: 0.08em; }
+  h1 {
+    color: var(--green);
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 12px rgba(51,255,102,0.35);
+    margin: 0.4rem 0 0.8rem;
+  }
+  .tagline { color: var(--muted); max-width: 640px; margin: 0 auto 1.4rem; }
+  .cursor { display: inline-block; width: 0.55em; height: 1.1em; background: var(--green); vertical-align: text-bottom; animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .cta-row { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 0.55rem 1.1rem;
+    border: 1px solid var(--green-dim); color: var(--green);
+    text-decoration: none; font-size: 0.85rem; letter-spacing: 0.05em;
+    background: rgba(51,255,102,0.05); transition: all .15s;
+  }
+  .btn:hover { background: rgba(51,255,102,0.15); box-shadow: 0 0 14px rgba(51,255,102,0.25); }
+  .btn.amber { border-color: #8a6200; color: var(--amber); background: rgba(255,176,0,0.05); }
+  .btn.amber:hover { background: rgba(255,176,0,0.12); box-shadow: 0 0 14px rgba(255,176,0,0.2); }
+
+  section { margin: 2.75rem 0; }
+  h2 { color: var(--amber); font-size: 1.15rem; letter-spacing: 0.06em; margin-bottom: 0.35rem; }
+  h2::before { content: "## "; color: var(--green-dim); }
+  .note { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; max-width: 760px; }
+
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); background: var(--panel); }
+  table { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 0.84rem; }
+  th {
+    text-align: left; color: var(--green-dim); font-weight: 600;
+    padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border);
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem;
+    white-space: nowrap;
+  }
+  td { padding: 0.7rem 0.8rem; border-bottom: 1px solid rgba(31,51,32,0.5); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.machine { color: var(--green); font-weight: 600; min-width: 150px; }
+  td.year { color: var(--amber); white-space: nowrap; }
+  td.speed { color: var(--amber); min-width: 120px; }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.5rem; font-size: 0.7rem;
+    letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid;
+  }
+  .badge.verified { color: var(--green); border-color: var(--green-dim); background: rgba(51,255,102,0.07); }
+  .badge.pending { color: var(--amber); border-color: #8a6200; background: rgba(255,176,0,0.07); }
+  .badge.disputed { color: var(--red); border-color: #7a2c28; background: rgba(255,95,86,0.07); }
+  .detail { color: var(--muted); font-size: 0.75rem; display: block; margin-top: 0.3rem; }
+  .proof a { color: var(--text); font-size: 0.78rem; text-decoration: underline; text-decoration-color: var(--green-dim); }
+  .proof a:hover { color: var(--green); }
+  .proof span.sep { color: var(--border); }
+
+  .empty { border: 1px dashed var(--border); padding: 1.2rem; color: var(--muted); font-size: 0.85rem; background: var(--panel); }
+  .empty a { color: var(--amber); }
+
+  .fame-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.8rem; }
+  .fame-card {
+    border: 1px solid var(--border); background: var(--panel); padding: 0.9rem 1rem;
+    transition: all .15s;
+  }
+  .fame-card:hover { border-color: var(--green-dim); box-shadow: 0 0 16px rgba(51,255,102,0.12); }
+  .fame-card .m { color: var(--green); font-weight: 700; }
+  .fame-card .c { color: var(--amber); font-size: 0.75rem; margin: 0.15rem 0 0.5rem; }
+  .fame-card .ch { color: var(--muted); font-size: 0.8rem; }
+  .fame-card .open { color: var(--green-dim); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.6rem; }
+
+  .rules { border-left: 3px solid var(--green-dim); padding-left: 1rem; color: var(--muted); font-size: 0.85rem; }
+  .rules b { color: var(--text); }
+  .rules li { margin: 0.4rem 0; list-style: none; }
+  .rules li::before { content: "> "; color: var(--green); }
+
+  footer { margin-top: 3.5rem; text-align: center; color: var(--muted); font-size: 0.78rem; }
+  footer a { color: var(--green-dim); }
+  #status { text-align:center; color: var(--muted); padding: 2rem 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="prompt">elyanlabs:~$ ./can_it_run_ai --leaderboard</div>
+    <h1>CAN IT RUN AI?<span class="cursor"></span></h1>
+    <p class="tagline">A community leaderboard for real AI inference on vintage and exotic silicon.
+    An N64 from 1996 generates text at 60 tok/s. What's your excuse?
+    <b>Prove it or it didn't happen.</b></p>
+    <div class="cta-row">
+      <a class="btn" href="https://github.com/Scottcjn/can-it-run-ai/issues/new?template=submission.yml">SUBMIT A RUN</a>
+      <a class="btn amber" href="https://github.com/Scottcjn/can-it-run-ai">GITHUB REPO</a>
+      <a class="btn amber" href="https://elyanlabs.ai/can-it-run-ai.html">MUSEUM PAGE</a>
+    </div>
+  </header>
+
+  <div id="status">loading leaderboard.json …</div>
+  <main id="main" style="display:none">
+    <section id="sec-inference"></section>
+    <section id="sec-compute"></section>
+    <section id="sec-failed"></section>
+
+    <section>
+      <h2>Weird Hardware Hall of Fame — WANTED</h2>
+      <p class="note">Unclaimed firsts. Run real inference on one of these, submit proof, and your name goes here permanently. Bragging rights are the reward; they do not depreciate.</p>
+      <div class="fame-grid" id="fame"></div>
+    </section>
+
+    <section>
+      <h2>The Rules</h2>
+      <ul class="rules">
+        <li><b>Real hardware or honestly labeled emulation.</b> An emulated run presented as real gets pulled.</li>
+        <li><b>Proof required.</b> Uncut boot-to-output video, or raw logs + sha256 checksums of binary and model. Both is better.</li>
+        <li><b>Honest limitations section required.</b> Say what the demo does not show.</li>
+        <li><b>Corrections welcome.</b> Disputed entries get marked disputed, not buried.</li>
+        <li><b>Failed attempts count.</b> Negative results are data.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Verification methodology borrows from RustChain's <a href="https://rustchain.org/proof-of-antiquity.html">Proof-of-Antiquity hardware fingerprinting</a> — timing behavior, cache characteristics, honest self-reporting.</p>
+    <p style="margin-top:0.5rem">Maintained by <a href="https://github.com/Scottcjn">Elyan Labs</a> · AGPL-3.0 · <span id="updated"></span></p>
+  </footer>
+</div>
+
+<script>
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderCategory(el, cat){
+  if(!cat) return;
+  let h = '<h2>'+esc(cat.title)+'</h2><p class="note">'+esc(cat.note)+'</p>';
+  if(!cat.entries.length){
+    h += '<div class="empty">(none yet) — tried something that did not work? <a href="https://github.com/Scottcjn/can-it-run-ai/issues/new?template=submission.yml">Submit the failure.</a> Negative results are data.</div>';
+    el.innerHTML = h; return;
+  }
+  h += '<div class="tablewrap"><table><thead><tr><th>Machine</th><th>Year</th><th>CPU</th><th>RAM</th><th>What it runs</th><th>Speed</th><th>Status</th><th>Proof</th></tr></thead><tbody>';
+  for(const e of cat.entries){
+    const proof = (e.proof||[]).map(p => '<a href="'+esc(p.url)+'">'+esc(p.label)+'</a>').join(' <span class="sep">·</span> ');
+    h += '<tr>'
+      + '<td class="machine">'+esc(e.machine)+'</td>'
+      + '<td class="year">'+esc(e.year_label||e.year)+'</td>'
+      + '<td>'+esc(e.cpu)+'</td>'
+      + '<td>'+esc(e.ram||'—')+'</td>'
+      + '<td>'+esc(e.runs)+'</td>'
+      + '<td class="speed">'+esc(e.speed)+'</td>'
+      + '<td><span class="badge '+esc(e.status)+'">'+esc(e.status)+'</span><span class="detail">'+esc(e.status_detail||'')+'</span></td>'
+      + '<td class="proof">'+proof+'</td>'
+      + '</tr>';
+  }
+  h += '</tbody></table></div>';
+  el.innerHTML = h;
+}
+fetch('leaderboard.json').then(r => r.json()).then(data => {
+  renderCategory(document.getElementById('sec-inference'), data.categories.inference);
+  renderCategory(document.getElementById('sec-compute'), data.categories.compute);
+  renderCategory(document.getElementById('sec-failed'), data.categories.failed);
+  const fame = document.getElementById('fame');
+  fame.innerHTML = (data.hall_of_fame_wanted||[]).map(f =>
+    '<div class="fame-card"><div class="m">'+esc(f.machine)+'</div><div class="c">'+esc(f.cpu)+'</div><div class="ch">'+esc(f.challenge)+'</div><div class="open">◉ UNCLAIMED</div></div>'
+  ).join('');
+  document.getElementById('updated').textContent = 'data updated ' + data.updated;
+  document.getElementById('status').style.display = 'none';
+  document.getElementById('main').style.display = '';
+}).catch(err => {
+  document.getElementById('status').textContent = 'failed to load leaderboard.json — ' + err;
+});
+</script>
+</body>
+</html>

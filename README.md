@@ -2,7 +2,11 @@
 
 A community leaderboard for running real AI inference, or verified compute, on vintage and exotic silicon. Prove it or it didn't happen.
 
+**Live leaderboard: [scottcjn.github.io/can-it-run-ai](https://scottcjn.github.io/can-it-run-ai/)** — includes the Weird Hardware Hall of Fame (unclaimed firsts: Dreamcast, TI-83, PlayStation 1, C64, Transputer, and more).
+
 Museum page: [elyanlabs.ai/can-it-run-ai.html](https://elyanlabs.ai/can-it-run-ai.html)
+
+The site is driven by [`docs/leaderboard.json`](docs/leaderboard.json) — verified entries are added there and to [LEADERBOARD.md](LEADERBOARD.md) together.
 
 ## What this is
 

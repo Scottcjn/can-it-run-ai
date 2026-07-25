@@ -1,0 +1,124 @@
+{
+  "updated": "2026-07-25",
+  "categories": {
+    "inference": {
+      "title": "Inference",
+      "note": "Real LLM/transformer inference on the machine listed. Speeds are machine+model specific and not comparable across rows.",
+      "entries": [
+        {
+          "machine": "Nintendo 64",
+          "year": 1996,
+          "cpu": "MIPS R4300i (93 MHz)",
+          "ram": "4 MB",
+          "runs": "Legend of Elya, 819K-param nano-GPT transformer, float32",
+          "speed": "~60 tok/s (61.8 tok/s captured)",
+          "status": "verified",
+          "status_detail": "Verified (emulator); real-hardware run via EverDrive 64 claimed in repo, video capture pending",
+          "proof": [
+            {"label": "Repo + ROM", "url": "https://github.com/Scottcjn/legend-of-elya-n64"},
+            {"label": "Video: first coherent output", "url": "https://bottube.ai/watch/shFVLBT0kHY"},
+            {"label": "Video: full demo", "url": "https://bottube.ai/watch/7GL90ftLqvh"},
+            {"label": "DOI 10.5281/zenodo.21435983", "url": "https://doi.org/10.5281/zenodo.21435983"},
+            {"label": "HN thread", "url": "https://news.ycombinator.com/item?id=47105087"}
+          ]
+        },
+        {
+          "machine": "Sun Cobalt Qube 3",
+          "year": 1998,
+          "cpu": "AMD K6-2/450",
+          "ram": "stock unit",
+          "runs": "Same 819K nano-GPT, ported to C89, built with gcc 2.95 on the stock 2001 Cobalt Linux image",
+          "speed": "~12 tok/s (64 tokens / 5.30 s CPU)",
+          "status": "verified",
+          "status_detail": "Verified (README + screenshot; no video yet)",
+          "proof": [
+            {"label": "Port docs", "url": "https://github.com/Scottcjn/legend-of-elya-n64/tree/main/cobalt-qube3"},
+            {"label": "Terminal capture", "url": "https://raw.githubusercontent.com/Scottcjn/legend-of-elya-n64/main/cobalt-qube3/oracle_k6_run.png"}
+          ]
+        },
+        {
+          "machine": "PowerPC Macs (G5 dual 2.0, iMac G5, PowerBook G4 1.67, Power Mac G4 dual 1.25)",
+          "year": 2005,
+          "year_label": "1999-2005",
+          "cpu": "PowerPC G4 / G5",
+          "ram": "per machine",
+          "runs": "llama.cpp ported to Mac OS X Tiger and Leopard, TinyLlama",
+          "speed": "~3-5 t/s on G5, ~1-2 t/s on G4",
+          "status": "verified",
+          "status_detail": "Verified (port + tested-hardware table + third-party press; no public screenshots or video yet)",
+          "proof": [
+            {"label": "llama-cpp-tigerleopard", "url": "https://github.com/Scottcjn/llama-cpp-tigerleopard"},
+            {"label": "Hackster.io coverage (Nick Bild)", "url": "https://www.hackster.io/news/the-powerpc-has-still-got-it-c4348bd7a88c"},
+            {"label": "vec_perm paper, DOI 10.5281/zenodo.21282030", "url": "https://doi.org/10.5281/zenodo.21282030"}
+          ]
+        },
+        {
+          "machine": "IBM POWER8 S824",
+          "year": 2014,
+          "cpu": "Dual 8-core POWER8, SMT8",
+          "ram": "512 GB",
+          "runs": "llama.cpp with PSE / RAM Coffers optimizations, TinyLlama 1.1B Q4",
+          "speed": "147.5 t/s prompt (pp128), 18.9 t/s gen (tg32); 8.8x stock llama.cpp",
+          "status": "verified",
+          "status_detail": "Verified claims published; reproducible raw logs pending",
+          "proof": [
+            {"label": "ram-coffers", "url": "https://github.com/Scottcjn/ram-coffers"},
+            {"label": "Dated evidence still", "url": "https://raw.githubusercontent.com/Scottcjn/ram-coffers/main/youtube-evidence-dec17-2025.png"},
+            {"label": "PSE paper, DOI 10.5281/zenodo.18623922", "url": "https://doi.org/10.5281/zenodo.18623922"},
+            {"label": "RAM Coffers paper, DOI 10.5281/zenodo.18717767", "url": "https://doi.org/10.5281/zenodo.18717767"},
+            {"label": "Benchmark charts", "url": "https://github.com/Scottcjn/Rustchain/tree/main/benchmarks/pse/sample_results/charts"}
+          ]
+        }
+      ]
+    },
+    "compute": {
+      "title": "Verified compute (not inference)",
+      "note": "Real work on vintage platforms that is not LLM inference. Labeled as such on purpose.",
+      "entries": [
+        {
+          "machine": "Amiga (classic AmigaOS, m68k)",
+          "year": 1985,
+          "year_label": "1985-1994 platform",
+          "cpu": "Motorola 68k (emulated via FS-UAE)",
+          "ram": "per config",
+          "runs": "RustChain miner + SDK + tools + micro-JVM + bootable AROS distro, live-attesting to the production network. Self-detects UAE and reports emulation honestly.",
+          "speed": "n/a (attestation, not inference)",
+          "status": "verified",
+          "status_detail": "Verified (emulated, honestly labeled; no real-hardware run documented)",
+          "proof": [
+            {"label": "rustchain-amiga", "url": "https://github.com/Scottcjn/rustchain-amiga"},
+            {"label": "Proof of Antiquity paper, DOI 10.5281/zenodo.18623592", "url": "https://doi.org/10.5281/zenodo.18623592"}
+          ]
+        },
+        {
+          "machine": "Sun Cobalt Qube 3",
+          "year": 1998,
+          "cpu": "AMD K6-2/450",
+          "ram": "stock unit",
+          "runs": "rustchain-vintage-x86: single-file C89 RustChain miner for 486/Pentium/K6 on kernel 2.0/2.2. RDTSC clock-drift fingerprint, honest hypervisor reporting.",
+          "speed": "n/a (attestation, not inference)",
+          "status": "verified",
+          "status_detail": "Verified",
+          "proof": [
+            {"label": "rustchain-vintage-x86", "url": "https://github.com/Scottcjn/rustchain-vintage-x86"}
+          ]
+        }
+      ]
+    },
+    "failed": {
+      "title": "Failed attempts",
+      "note": "Negative results are data. Tried something and it did not work? Submit it.",
+      "entries": []
+    }
+  },
+  "hall_of_fame_wanted": [
+    {"machine": "Sega Dreamcast", "cpu": "SH-4 @ 200 MHz", "challenge": "First LLM/transformer inference, any parameter count"},
+    {"machine": "TI-83 / TI-84 calculator", "cpu": "Z80 @ 6-15 MHz", "challenge": "Any coherent text generation from a trained model"},
+    {"machine": "SPARCstation", "cpu": "SPARC v7/v8", "challenge": "First inference run under SunOS/Solaris"},
+    {"machine": "Amiga (native, real 68k)", "cpu": "Motorola 68030/040/060", "challenge": "First inference on real Amiga hardware (emulated attestation already exists; inference does not)"},
+    {"machine": "PlayStation 1", "cpu": "MIPS R3000A @ 33 MHz", "challenge": "Beat the N64. Fewer MHz, more glory"},
+    {"machine": "Apple II / Commodore 64", "cpu": "6502 @ 1 MHz", "challenge": "The final boss. Any trained-model output at all"},
+    {"machine": "486 (real DOS iron)", "cpu": "i486", "challenge": "Native DOS inference, no Linux crutch"},
+    {"machine": "Transputer", "cpu": "INMOS T800", "challenge": "Parallel inference on the original parallel architecture"}
+  ]
+}
